@@ -1,9 +1,4 @@
-NutriDía 8.0 — Rutinas para casa y gimnasio
-
-Incluye todo el contenido de NutriDía 7.0 y añade la pestaña Rutinas con selección de lugar y nivel, ejercicios, enlaces de búsqueda de vídeos, series, repeticiones, cargas e historial independiente por perfil.
-
-INSTALACIÓN: descomprime y sube TODOS los archivos a la raíz del repositorio de GitHub Pages, sustituyendo los anteriores. Espera a que se publique y reinicia la app instalada. No cambies la dirección del sitio.
-
-Los datos permanecen en localStorage con la misma clave que versiones anteriores. Haz una copia de seguridad desde la app antes de actualizar. Los datos NO se sincronizan entre móviles. Garmin y Strava requieren importar CSV; NO existe conexión automática. Los enlaces de ejercicios abren búsquedas de vídeos.
-
-Las rutinas son orientativas y no sustituyen asesoramiento profesional.
+NutriDía 9.2: selector de frutas con opciones HTML de respaldo y cálculo por piezas o gramos.
+Sube TODOS los archivos del ZIP a la raíz del repositorio, sustituyendo los homónimos.
+Exporta primero copia de seguridad desde la aplicación. No borres los datos del navegador.
+Esta actualización usa la misma clave local nutridia-v1.

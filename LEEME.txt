@@ -1,4 +1,1 @@
-NutriDía 9.2: selector de frutas con opciones HTML de respaldo y cálculo por piezas o gramos.
-Sube TODOS los archivos del ZIP a la raíz del repositorio, sustituyendo los homónimos.
-Exporta primero copia de seguridad desde la aplicación. No borres los datos del navegador.
-Esta actualización usa la misma clave local nutridia-v1.
+NutriDía v14. Menús con cálculo estimado cuando hay ingredientes, lista de compra según raciones y fotos reales aportadas o de productos guardados. Productos preparados sin etiqueta: pendiente de calcular. Exporta tus datos antes de actualizar. Los datos se guardan localmente en el navegador.

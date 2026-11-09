@@ -1,11 +1,9 @@
-NutriDía 9.0 — actualización desde v8
+NutriDía 8.0 — Rutinas para casa y gimnasio
 
-1. Antes de actualizar, exporta la copia JSON desde NutriDía.
-2. Descomprime el ZIP y sube TODOS los archivos a la raíz del repositorio GitHub Pages, sustituyendo los anteriores.
-3. No subas el ZIP sin descomprimir.
-4. Abre la web en navegador y recarga; la caché del service worker usa versión v9.
-5. Conserva la copia JSON por si fuera necesario recuperar registros.
+Incluye todo el contenido de NutriDía 7.0 y añade la pestaña Rutinas con selección de lugar y nivel, ejercicios, enlaces de búsqueda de vídeos, series, repeticiones, cargas e historial independiente por perfil.
 
-Datos: almacenamiento local del navegador; NO sincroniza automáticamente entre móviles. Garmin/Strava: importación CSV manual, no sincronización OAuth.
-Valores de frutas/postres: aproximados; productos Ametller: introducir valores reales de etiqueta.
-El menú planificado no registra consumos. La lista de compra es orientativa y puede requerir ajustes manuales al cambiar platos.
+INSTALACIÓN: descomprime y sube TODOS los archivos a la raíz del repositorio de GitHub Pages, sustituyendo los anteriores. Espera a que se publique y reinicia la app instalada. No cambies la dirección del sitio.
+
+Los datos permanecen en localStorage con la misma clave que versiones anteriores. Haz una copia de seguridad desde la app antes de actualizar. Los datos NO se sincronizan entre móviles. Garmin y Strava requieren importar CSV; NO existe conexión automática. Los enlaces de ejercicios abren búsquedas de vídeos.
+
+Las rutinas son orientativas y no sustituyen asesoramiento profesional.

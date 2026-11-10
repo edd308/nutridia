@@ -1,1 +1,1 @@
-NutriDía v14. Menús con cálculo estimado cuando hay ingredientes, lista de compra según raciones y fotos reales aportadas o de productos guardados. Productos preparados sin etiqueta: pendiente de calcular. Exporta tus datos antes de actualizar. Los datos se guardan localmente en el navegador.
+NutriDía 9.4 — cálculo de macronutrientes de recetas conocidas y edición de cantidades. Los platos sin receta validada requieren datos del envase o introducción manual. Conserva los datos del navegador; exporta una copia antes de actualizar.

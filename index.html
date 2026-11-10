@@ -84,6 +84,46 @@ const recipeMacros={
  'Pollo al horno con patata y verduras (casero)':[ ['Pollo',180],['Patata',180],['Verduras variadas',200]],
  'Merluza al horno con arroz y ensalada (casero)':[ ['Merluza',180],['Arroz seco',70],['Ensalada variada',150]]
 };
+
+// Recetas orientativas adicionales. Los pesos son por persona y se pueden ajustar.
+Object.assign(macroFoods,{
+ 'Fruta variada':[60,.5,15,.2],'Frutos rojos':[50,.8,12,.3],
+ 'Pasta integral seca':[350,13,68,2.5],'Tomate triturado':[30,1.4,5,.3],
+ 'Aceite de oliva':[884,0,0,100], 'Cuscús seco':[376,12.8,77,.6],
+ 'Arroz de verduras preparado':[135,3,25,2.5],
+ 'Tortilla de calabacín preparada':[135,7,5,9]
+});
+Object.assign(recipeMacros,{
+ 'Yogur natural, avena y plátano':[['Yogur natural',200],['Avena',40],['Plátano',120]],
+ 'Tostadas integrales con huevo y tomate':[['Pan integral',80],['Huevo',100],['Tomate',100]],
+ 'Avena con leche y frutos rojos':[['Avena',50],['Leche',200],['Frutos rojos',100]],
+ 'Yogur con fruta y nueces':[['Yogur natural',200],['Fruta variada',150],['Nueces',25]],
+ 'Pan integral con queso fresco y fruta':[['Pan integral',80],['Queso fresco',100],['Fruta variada',150]],
+ 'Tortilla y tostada integral':[['Huevo',120],['Pan integral',70]],
+ 'Porridge de avena y manzana':[['Avena',55],['Leche',200],['Manzana',150]],
+ 'Yogur con avena y plátano':[['Yogur natural',200],['Avena',40],['Plátano',120]],
+ 'Tostada con huevo y tomate':[['Pan integral',80],['Huevo',100],['Tomate',100]],
+ 'Avena con leche y fruta':[['Avena',50],['Leche',200],['Fruta variada',150]],
+ 'Yogur con nueces y fruta':[['Yogur natural',200],['Nueces',25],['Fruta variada',150]],
+ 'Pan integral con queso fresco':[['Pan integral',80],['Queso fresco',120]],
+ 'Tortilla con tostada':[['Huevo',120],['Pan integral',70]],
+ 'Porridge de manzana':[['Avena',55],['Leche',200],['Manzana',150]],
+ 'Fruta y yogur natural':[['Fruta variada',150],['Yogur natural',125]],
+ 'Fruta y yogur':[['Fruta variada',150],['Yogur natural',125]],
+ 'Plátano y un puñado de nueces':[['Plátano',120],['Nueces',30]],
+ 'Plátano y nueces':[['Plátano',120],['Nueces',30]],
+ 'Queso fresco y fruta':[['Queso fresco',100],['Fruta variada',150]],
+ 'Yogur y copos de avena':[['Yogur natural',125],['Avena',30]],
+ 'Yogur con avena':[['Yogur natural',125],['Avena',30]],
+ 'Tostada con hummus':[['Pan integral',60],['Hummus',60]],
+ 'Fruta y almendras':[['Fruta variada',150],['Almendras',30]],
+ 'Yogur natural y kiwi':[['Yogur natural',125],['Kiwi',100]],
+ 'Yogur y kiwi':[['Yogur natural',125],['Kiwi',100]],
+ 'Pasta integral con tomate y huevo (casero)':[['Pasta integral seca',80],['Tomate triturado',130],['Huevo',100]],
+ 'Garbanzos con arroz y verduras (casero)':[['Garbanzos cocidos',170],['Arroz seco',50],['Verduras variadas',180]],
+ 'Ensalada de lentejas Ametller Origen 250 g':null,
+ 'Ensalada de garbanzos Ametller Origen 250 g':null
+});
 function planDish(p,key,i){return (p.planOverrides||{})[i+'-'+key]||(key==='breakfast'&&i<5?weekdayBreakfast:menus[p.plan.kind][key][i])}
 function macroTotals(rows,scale=1){let v=[0,0,0,0];for(let [name,g] of rows){let f=macroFoods[name];if(!f)return null;for(let i=0;i<4;i++)v[i]+=f[i]*g*scale/100}return v}
 function planRecipe(p,key,i,dish){if(key==='breakfast'&&i<5&&dish===weekdayBreakfast)return recipeMacros.weekdayBreakfast;return recipeMacros[dish]||null}
@@ -93,7 +133,7 @@ function addPlannedMeal(key){
  if(!(key in labels))return;
  let date=today(),i=(new Date().getDay()+6)%7;
  if(p.meals.some(x=>x.date===date&&x.planMealKey===key))return alert('Esta comida ya está registrada hoy. Elimina primero su registro si necesitas corregirlo.');
- let dish=planDish(p,key,i),recipe=planRecipe(p,key,i,dish),v=recipe?macroTotals(recipe):null;
+ let dish=planDish(p,key,i),recipe=planRecipe(p,key,i,dish),v=recipe?macroTotals(recipe):null;let savedFood=(p.savedDishNutrition||{})[dish];
  let old=document.getElementById('planMacroPanel');if(old)old.remove();
  let panel=document.createElement('div');panel.id='planMacroPanel';panel.className='card';panel.style.border='2px solid #145c4a';
  panel.innerHTML='<h3>Registrar '+safe(labels[key])+': '+safe(dish)+'</h3><p class="muted" id="macroNote"></p>'+
@@ -103,7 +143,7 @@ function addPlannedMeal(key){
  let fields=['macroKcal','macroProtein','macroCarbs','macroFat'];
  function fill(){let scale=Number($('macroPortion').value);if(!Number.isFinite(scale)||scale<.1||scale>5)return;let vals=macroTotals(recipe,scale);fields.forEach((id,j)=>$(id).value=j===0?Math.round(vals[j]):vals[j].toFixed(1));$('macroIngredients').textContent='Ingredientes estimados: '+recipe.map(([n,g])=>n+' '+Math.round(g*scale)+' g').join(' · ')}
  if(recipe){$('macroNote').textContent='Estimación por ingredientes. Revisa aceite, salsas, marcas y preparación; puedes editar los cuatro valores.';$('macroPortion').oninput=fill;fill()}
- else $('macroNote').textContent='Usa los datos reales del envase o de la receta.';
+ else { $('macroNote').textContent=savedFood?'Valores recuperados de tu último registro de este plato. Comprueba que la ración sea igual.':'Introduce los valores reales del envase o de tu receta una sola vez.';if(savedFood)fields.forEach((id,j)=>$(id).value=[savedFood.kcal,savedFood.protein,savedFood.carbs,savedFood.fat][j]); }
  $('cancelMacro').onclick=()=>panel.remove();
  $('confirmMacro').onclick=()=>{let vals=fields.map(id=>$(id).value.trim()===''?NaN:Number($(id).value));if(vals.some((n,j)=>!Number.isFinite(n)||n<0||n>[5000,500,800,500][j]))return alert('Completa los cuatro valores nutricionales con números válidos.');
  let entry={id:uid(),date,type:labels[key],name:dish+(recipe?' (estimación por ingredientes)':' (datos introducidos)'),kcal:Math.round(vals[0]),protein:Math.round(vals[1]*10)/10,carbs:Math.round(vals[2]*10)/10,fat:Math.round(vals[3]*10)/10,photo:null,planMealKey:key};

@@ -1,1 +1,1 @@
-NutriDía 9.4 — cálculo de macronutrientes de recetas conocidas y edición de cantidades. Los platos sin receta validada requieren datos del envase o introducción manual. Conserva los datos del navegador; exporta una copia antes de actualizar.
+NutriDia 9.5: recetas orientativas adicionales y memoria de nutrientes por plato preparado. Actualiza archivos sin borrar los datos del navegador. Exporta una copia antes de actualizar. Los valores son estimaciones, salvo los que introduzcas de la etiqueta.

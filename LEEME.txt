@@ -1,1 +1,2 @@
-NutriDia 9.5: recetas orientativas adicionales y memoria de nutrientes por plato preparado. Actualiza archivos sin borrar los datos del navegador. Exporta una copia antes de actualizar. Los valores son estimaciones, salvo los que introduzcas de la etiqueta.
+NutriDia 9.6: nuevos alimentos, frutas e ingredientes personalizados.
+Sube todos los archivos a GitHub Pages. Exporta primero tus datos desde la app.

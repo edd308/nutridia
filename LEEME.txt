@@ -1,2 +1,1 @@
-NutriDía 10.0: historial de comidas agrupado por fechas y pestaña independiente para crear alimentos.
-Antes de actualizar, exporta copia de seguridad. Sube los archivos a la raíz de GitHub Pages. No borres datos del navegador.
+NutriDía v14. Menús con cálculo estimado cuando hay ingredientes, lista de compra según raciones y fotos reales aportadas o de productos guardados. Productos preparados sin etiqueta: pendiente de calcular. Exporta tus datos antes de actualizar. Los datos se guardan localmente en el navegador.

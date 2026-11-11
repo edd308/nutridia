@@ -330,7 +330,7 @@ async function searchOnlineFood(){let query=$('offQuery').value.trim(),status=$(
 function useOnlineFood(i){let x=onlineHits[i],p=active();if(!x||!p)return;let obj={id:uid(),name:(x.name+(x.brand?' · '+x.brand:'')).slice(0,120),kcal:x.kcal,protein:x.protein,carbs:x.carbs,fat:x.fat,source:'Open Food Facts · verificar etiqueta',image:x.image};(p.catalog??=[]).push(obj);if(!save()){p.catalog.pop();return}render();$('recipeIngredient').value=obj.id;$('offStatus').textContent='Producto guardado. Selecciónalo arriba y añade la cantidad consumida.'}
 // Mantener todos los perfiles y datos históricos; solo se amplía la interfaz.
 const renderBeforeRecipe=render;render=function(){renderBeforeRecipe();if(active())renderRecipePicker()};
-$('recipeDate').value=today();render();
+$('recipeDate').value=today();
 
 
 // Asistente de macros v15: objetivos independientes por perfil, sin alterar comidas previas.
@@ -455,7 +455,7 @@ function generateDinnerAuto(){
  for(const [id,k] of [['macroK','kcal'],['macroP','protein'],['macroC','carbs'],['macroF','fat']])$(id).value=g[k];
  $('macroDate').value=today();
  try{suggestMacroPlate();showDinnerResult();}
- catch(err){const t=$('dinnerVisibleResult');t.innerHTML='<h3>No se pudo generar el plato (v19.7)</h3><p>'+safe(String(err.message||err))+'</p>';t.hidden=false;}
+ catch(err){const t=$('dinnerVisibleResult');t.innerHTML='<h3>No se pudo generar el plato (v19.8)</h3><p>'+safe(String(err.message||err))+'</p>';t.hidden=false;}
 }
 function showDinnerResult(){
  const target=$('dinnerVisibleResult');if(!target)return;target.hidden=false;
@@ -475,8 +475,8 @@ function openWaterDetails(){const b=document.querySelector('nav button[data-page
 // Los días ya están agrupados en renderPlan; evitar envolverlos de nuevo.
 const _originalRenderV19=render;
 render=function(){_originalRenderV19();renderHomeWater();showFoodTab(selectedFoodTab);showDietDay(selectedDietDay)};
-// Run after the application's original startup.
-renderHomeWater();showFoodTab('auto');showDietDay(0);
+// Inicio al final: todas las constantes del generador ya están inicializadas.
+render();renderHomeWater();showFoodTab('auto');showDietDay(0);
 </script>
 <script>
 // Registro voluntario de platos planificados, usando las macros calculadas por la dieta.

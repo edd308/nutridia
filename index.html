@@ -167,7 +167,7 @@ function setPlanImage(i,key){let p=active(),name=plannedDish(p,i,key);let url=pr
 function planNutritionText(n){return n?`${Math.round(n.t.kcal)} kcal · P ${n.t.protein.toFixed(1)} g · HC ${n.t.carbs.toFixed(1)} g · G ${n.t.fat.toFixed(1)} g · ${n.serving} ración(es) · ${n.source}`:'Pendiente de calcular: crea una receta con ingredientes o guarda el producto con sus nutrientes';}
 function renderPlan(){let p=active();if(!p||!p.plan){$('planResult').innerHTML='<h2>Tu menú</h2><p class="muted">Genera un menú para comenzar.</p>';return}let x=p.plan,m=menus[x.kind],days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const types=[['Desayuno','breakfast',.25],['Comida','lunch',.35],['Merienda','snack',.10],['Cena','dinner',.30]];
-$('planResult').innerHTML=`<h2>Menú de 7 días · ${x.kcal} kcal/día</h2><p class="muted">Los enlaces abren una búsqueda de recetas o productos. Los objetivos de kcal por comida son orientativos. Los nutrientes se estiman a partir de recetas guardadas o ingredientes estándar cuando es posible. Las comidas envasadas requieren etiqueta verificada. Las fotos solo aparecen si las aportas o si están asociadas al producto guardado.</p>`+days.map((d,i)=>`<div class="diet-day" data-day="${i}" ${i===selectedDietDay?"":"hidden"}><h3>${d}</h3>`+types.map(([label,key,fraction])=>{let dish=(p.planOverrides||{})[i+'-'+key]||(key==='breakfast'&&i<5?weekdayBreakfast:m[key][i]);let prepared=key==='lunch'&&i<5;let nutrition=planNutrition(p,dish,i+'-'+key);let image=(p.planPhotos||{})[i+'-'+key]||planImage(p,dish);let query=prepared?'site:ametllerorigen.com '+dish+' Ametller Origen':dish+' receta ingredientes preparación';let link='https://www.google.com/search?q='+encodeURIComponent(query);return `<div class="menu-row">${image?`<img src="${safe(image)}" alt="Foto aportada del plato o producto" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div class="no-photo">Sin foto verificada</div>`}<div class="details"><small>${label} · objetivo ~${Math.round(x.kcal*fraction)} kcal</small><div><strong>${safe(dish)}</strong></div><div class="muted" style="margin-top:5px">${safe(planNutritionText(nutrition))}</div>${(p.meals||[]).some(x=>x.planSlot===i+"-"+key&&x.date===($('planConsumedDate')?.value||today())&&x.name===dish)?`<div style="color:#34785b;font-weight:700">✓ Registrado en la fecha seleccionada</div>`:""}<a href="${link}" target="_blank" rel="noopener noreferrer">${prepared?'Buscar producto e instrucciones':'Buscar receta y preparación'} ↗</a><div class="actions" style="margin-top:8px">${nutrition?`<button type="button" class="small" onclick="registerPlannedDish(${i},'${key}')">✓ He comido este plato</button>`:`<span class="muted">Para registrar, completa primero sus nutrientes.</span>`}<button type="button" class="secondary small" onclick="choosePlanDish(${i},'${key}')">✏️ Cambiar</button><button type="button" class="secondary small" onclick="regeneratePlanDish(${i},'${key}')">🔄 Otra opción</button><button type="button" class="secondary small" onclick="setPlanImage(${i},'${key}')">📷 Foto real</button></div></div></div>`}).join('')+'</div>').join('')+'<p class="notice">Los platos preparados se proponen de lunes a viernes. Sábado y domingo, comidas caseras. Los enlaces requieren internet. No se ha verificado una receta específica para cada plato.</p>';showDietDay(selectedDietDay)}
+$('planResult').innerHTML=`<h2>Menú de 7 días · ${x.kcal} kcal/día</h2><p class="muted">Los enlaces abren una búsqueda de recetas o productos. Los objetivos de kcal por comida son orientativos. Los nutrientes se estiman a partir de recetas guardadas o ingredientes estándar cuando es posible. Las comidas envasadas requieren etiqueta verificada. Las fotos solo aparecen si las aportas o si están asociadas al producto guardado.</p>`+days.map((d,i)=>`<div class="diet-day" data-day="${i}" ${i===selectedDietDay?"":"hidden"}><h3>${d}</h3>`+types.map(([label,key,fraction])=>{let dish=(p.planOverrides||{})[i+'-'+key]||(key==='breakfast'&&i<5?weekdayBreakfast:m[key][i]);let prepared=key==='lunch'&&i<5;let nutrition=planNutrition(p,dish,i+'-'+key);let image=(p.planPhotos||{})[i+'-'+key]||planImage(p,dish);let query=prepared?'site:ametllerorigen.com '+dish+' Ametller Origen':dish+' receta ingredientes preparación';let link='https://www.google.com/search?q='+encodeURIComponent(query);return `<div class="menu-row">${image?`<img src="${safe(image)}" alt="Foto aportada del plato o producto" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div class="no-photo">Sin foto verificada</div>`}<div class="details"><small>${label} · objetivo ~${Math.round(x.kcal*fraction)} kcal</small><div><strong>${safe(dish)}</strong></div><div class="muted" style="margin-top:5px">${safe(planNutritionText(nutrition))}</div>${(p.meals||[]).some(x=>x.planSlot===i+"-"+key&&x.date===($('planConsumedDate')?.value||today())&&x.name===dish)?`<div style="color:#34785b;font-weight:700">✓ Registrado en la fecha seleccionada</div>`:""}<a href="${link}" target="_blank" rel="noopener noreferrer">${prepared?'Buscar producto e instrucciones':'Buscar receta y preparación'} ↗</a><div class="actions" style="margin-top:8px"><button type="button" class="small" onclick="registerPlannedDish(${i},'${key}')">${nutrition?'✓ He comido este plato':'🧮 Completar macros y registrar'}</button><button type="button" class="secondary small" onclick="choosePlanDish(${i},'${key}')">✏️ Cambiar</button><button type="button" class="secondary small" onclick="regeneratePlanDish(${i},'${key}')">🔄 Otra opción</button><button type="button" class="secondary small" onclick="setPlanImage(${i},'${key}')">📷 Foto real</button></div></div></div>`}).join('')+'</div>').join('')+'<p class="notice">Los platos preparados se proponen de lunes a viernes. Sábado y domingo, comidas caseras. Los enlaces requieren internet. No se ha verificado una receta específica para cada plato.</p>';showDietDay(selectedDietDay)}
 
 
 // Edición por comida y alternativas, sin modificar el diario de alimentos consumidos.
@@ -453,11 +453,11 @@ function generateDinnerAuto(){
  const g=p.macroGoals||macroDefault(p);
  for(const [id,k] of [['macroK','kcal'],['macroP','protein'],['macroC','carbs'],['macroF','fat']])$(id).value=g[k];
  $('macroDate').value=today();
- suggestMacroPlate();
- showDinnerResult();
+ try{suggestMacroPlate();showDinnerResult();}
+ catch(err){const t=$('dinnerVisibleResult');t.innerHTML='<h3>No se pudo generar el plato</h3><p>'+safe(String(err.message||err))+'</p>';t.hidden=false;}
 }
 function showDinnerResult(){
- const target=$('dinnerVisibleResult');if(!target)return;
+ const target=$('dinnerVisibleResult');if(!target)return;target.hidden=false;
  if(!macroCandidates.length){target.innerHTML='<h3>🍽️ Resultado de la cena</h3><p>No hay un plato que encaje con lo que queda hoy. Revisa las calorías restantes o utiliza «Crear plato» para preparar una opción manual.</p>';target.scrollIntoView({behavior:'smooth',block:'nearest'});return}
  const x=macroCandidates[0],t=x.totals;
  target.innerHTML=`<div class="dish-icon" aria-hidden="true">🍽️</div><h3>Tu cena propuesta: ${safe(x.name)}</h3><p>Ingredientes y cantidades:</p><ul class="dinner-ingredients">${x.items.map(i=>`<li><strong>${safe(i.name)}</strong>: ${i.grams} g</li>`).join('')}</ul><p class="dinner-macros">${Math.round(t.kcal)} kcal · ${macroRound(t.protein)} g proteínas · ${macroRound(t.carbs)} g hidratos · ${macroRound(t.fat)} g grasas</p><p class="muted">Cantidades estimadas para acercarte a tus objetivos según lo que has registrado hoy. La cena no se añade al historial hasta que confirmes que la has comido.</p><div class="actions"><button type="button" onclick="macroUse(0)">✓ Registrar esta cena</button><button type="button" class="secondary" onclick="macroEdit(0);showFoodTab('create')">✏️ Editar ingredientes</button></div>`;
@@ -471,21 +471,11 @@ function renderHomeWater(){
 }
 function openWaterDetails(){const b=document.querySelector('nav button[data-page="progress"]');if(b)b.click();$('waterCard')?.scrollIntoView({behavior:'smooth',block:'start'})}
 // Decorar cada día generado con un contenedor; la lógica original del menú permanece.
-function decorateDietDays(){
- const r=$('planResult');if(!r||!active()?.plan)return;
- const headings=[...r.querySelectorAll('h3')].filter(h=>['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].includes(h.textContent.trim()));
- headings.forEach((h,i)=>{
-  const group=document.createElement('div');group.className='diet-day';group.dataset.day=String(i);h.parentNode.insertBefore(group,h);
-  let node=h;while(node){let next=node.nextSibling;if(node!==h&&node.nodeType===1&&node.matches('h3'))break;group.appendChild(node);node=next}
- });
- showDietDay(selectedDietDay);
-}
-const _originalRenderPlan=renderPlan;
-renderPlan=function(){_originalRenderPlan();decorateDietDays()};
+// Los días ya están agrupados en renderPlan; evitar envolverlos de nuevo.
 const _originalRenderV19=render;
-render=function(){_originalRenderV19();renderHomeWater();showFoodTab(selectedFoodTab)};
+render=function(){_originalRenderV19();renderHomeWater();showFoodTab(selectedFoodTab);showDietDay(selectedDietDay)};
 // Run after the application's original startup.
-renderHomeWater();showFoodTab('auto');decorateDietDays();
+renderHomeWater();showFoodTab('auto');showDietDay(0);
 </script>
 <script>
 // Registro voluntario de platos planificados, usando las macros calculadas por la dieta.
@@ -493,7 +483,15 @@ function registerPlannedDish(day,slot){
  const p=active();if(!p?.plan)return alert('Genera primero una dieta.');
  const date=$('planConsumedDate')?.value||today();
  const name=plannedDish(p,day,slot),info=planNutrition(p,name,day+'-'+slot);
- if(!info||!info.t||!['kcal','protein','carbs','fat'].every(k=>Number.isFinite(info.t[k])))return alert('Este plato aún no tiene datos nutricionales suficientes. Guarda su receta o producto con los nutrientes para poder registrarlo.');
+ if(!info||!info.t||!['kcal','protein','carbs','fat'].every(k=>Number.isFinite(info.t[k]))){
+   alert('Este plato necesita sus ingredientes y cantidades para calcular macros. Se abrirá Crear plato; no se inventarán valores.');
+   $('recipeName').value=name;$('recipeDate').value=date;
+   $('recipeMeal').value={breakfast:'Desayuno',lunch:'Comida',snack:'Merienda',dinner:'Cena'}[slot]||'Otro';
+   const nav=document.querySelector('nav button[data-page="food"]');if(nav)nav.click();
+   showFoodTab('create');
+   $('recipeBuilder').scrollIntoView({block:'start',behavior:'smooth'});
+   return;
+ }
  const already=(p.meals||[]).find(x=>x.date===date&&x.planSlot===day+'-'+slot&&x.name===name);
  if(already)return alert('Este plato ya está registrado para la fecha seleccionada. Puedes corregirlo desde Comidas > Historial.');
  const type={breakfast:'Desayuno',lunch:'Comida',snack:'Merienda',dinner:'Cena'}[slot]||'Otro';

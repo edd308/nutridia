@@ -260,7 +260,7 @@ $('saveWorkout').onclick=()=>{let p=active();if(!p)return;let level=$('trainingL
 const oldRender=render;render=function(){oldRender();if(active())drawTrainingHistory()};
 
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('main section').forEach(s=>s.hidden=s.id!==b.dataset.page);document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.page==='training')drawTraining();window.scrollTo(0,0)});
-['foodDate','weightDate','exerciseDate','dailyBurnDate'].forEach(id=>$(id).value=today());if(!db.profiles.length){db.profiles.push({id:uid(),name:'Mi perfil',goal:2000,startWeight:null,meals:[],weights:[],exercises:[],plan:null});db.active=db.profiles[0].id;save()}if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+['foodDate','weightDate','exerciseDate','dailyBurnDate'].forEach(id=>$(id).value=today());if(!db.profiles.length){db.profiles.push({id:uid(),name:'Mi perfil',goal:2000,startWeight:null,meals:[],weights:[],exercises:[],plan:null});db.active=db.profiles[0].id;save()}if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister()))).catch(()=>{}));
 
 // NutriDía 9: funciones añadidas sin borrar el almacenamiento de versiones anteriores.
 const quickCatalog=[['Manzana',52,.3,14,.2],['Plátano',89,1.1,23,.3],['Kiwi',61,1.1,15,.5],['Uvas',69,.7,18,.2],['Fresas',32,.7,7.7,.3],['Pera',57,.4,15,.1],['Naranja',47,.9,12,.1],['Yogur natural',63,3.5,4.7,3.5],['Chocolate negro (orientativo)',600,8,46,43],['Flan (orientativo)',145,4,23,4]];
@@ -352,10 +352,10 @@ const macroTemplates=[
  ['Pan integral con huevo y aguacate',[['Pan integral',100],['Huevo entero',110],['Aguacate',70],['Tomate',100]]]
 ];
 let macroCandidates=[];
-function macroCalc(items){let t={kcal:0,protein:0,carbs:0,fat:0};for(let i of items){for(let k of macroKeys)t[k]+=Number(i[k])*i.grams/100}return t}
+function macroCalc(items){let t={kcal:0,protein:0,carbs:0,fat:0};for(let i of items){for(let k of ['kcal','protein','carbs','fat'])t[k]+=Number(i[k])*i.grams/100}return t}
 function macroPlate(name,parts,factor){let foods=recipeBasics;let items=parts.map(([n,g])=>{let x=foods.find(f=>f.name===n);return {...x,grams:Math.max(1,Math.round(g*factor)),source:'Valores medios orientativos'}});return {name,items,totals:macroCalc(items)}}
-function macroScore(t,remaining){let diff=macroKeys.map(k=>Math.max(0,remaining[k]-t[k]));let over=macroKeys.map(k=>Math.max(0,t[k]-remaining[k]));return diff[0]/Math.max(200,remaining.kcal)+diff[1]/Math.max(20,remaining.protein)+diff[2]/Math.max(25,remaining.carbs)+diff[3]/Math.max(10,remaining.fat)+2.2*(over[0]/Math.max(200,remaining.kcal)+over[1]/Math.max(20,remaining.protein)+over[2]/Math.max(25,remaining.carbs)+over[3]/Math.max(10,remaining.fat))}
-function suggestMacroPlate(){let p=active();if(!p)return alert('Selecciona un perfil');let goal;try{goal=macroReadGoals()}catch(e){return alert(e.message)}p.macroGoals=goal;if(!save())return;let date=$('macroDate').value||today(),meals=p.meals.filter(x=>x.date===date),eaten={};for(let k of macroKeys)eaten[k]=meals.reduce((s,x)=>s+Number(x[k]||0),0);let remaining={};for(let k of macroKeys)remaining[k]=Math.max(0,goal[k]-eaten[k]);let desc=(o)=>`${Math.round(o.kcal)} kcal · P ${macroRound(o.protein)} g · HC ${macroRound(o.carbs)} g · G ${macroRound(o.fat)} g`;
+function macroScore(t,remaining){let diff=['kcal','protein','carbs','fat'].map(k=>Math.max(0,remaining[k]-t[k]));let over=['kcal','protein','carbs','fat'].map(k=>Math.max(0,t[k]-remaining[k]));return diff[0]/Math.max(200,remaining.kcal)+diff[1]/Math.max(20,remaining.protein)+diff[2]/Math.max(25,remaining.carbs)+diff[3]/Math.max(10,remaining.fat)+2.2*(over[0]/Math.max(200,remaining.kcal)+over[1]/Math.max(20,remaining.protein)+over[2]/Math.max(25,remaining.carbs)+over[3]/Math.max(10,remaining.fat))}
+function suggestMacroPlate(){let p=active();if(!p)return alert('Selecciona un perfil');let goal;try{goal=macroReadGoals()}catch(e){return alert(e.message)}p.macroGoals=goal;if(!save())return;let date=$('macroDate').value||today(),meals=p.meals.filter(x=>x.date===date),eaten={};for(let k of ['kcal','protein','carbs','fat'])eaten[k]=meals.reduce((s,x)=>s+Number(x[k]||0),0);let remaining={};for(let k of ['kcal','protein','carbs','fat'])remaining[k]=Math.max(0,goal[k]-eaten[k]);let desc=(o)=>`${Math.round(o.kcal)} kcal · P ${macroRound(o.protein)} g · HC ${macroRound(o.carbs)} g · G ${macroRound(o.fat)} g`;
 $('macroSummary').innerHTML=`<p><strong>Consumido:</strong> ${desc(eaten)}</p><p><strong>Te falta:</strong> ${desc(remaining)}</p><p class="muted">La suma de kcal puede diferir de la energía calculada a partir de los macros por redondeos, fibra y etiquetas. No se suman las calorías gastadas del reloj al objetivo alimentario.</p>`;
 if(remaining.kcal<120||remaining.protein+remaining.carbs+remaining.fat<12){$('macroSummary').innerHTML+='<p class="notice">Ya estás cerca del objetivo; la propuesta siguiente es opcional y no necesitas comerla.</p>'}
 macroCandidates=macroTemplates.flatMap(([name,parts])=>[.35,.5,.65,.8,1,1.2,1.4,1.6,1.8,2].map(f=>macroPlate(name,parts,f))).filter(x=>x.totals.kcal>=100&&x.totals.kcal<=Math.max(900,remaining.kcal*1.3)).sort((a,b)=>macroScore(a.totals,remaining)-macroScore(b.totals,remaining));let seen=new Set();macroCandidates=macroCandidates.filter(x=>{if(seen.has(x.name))return false;seen.add(x.name);return true}).slice(0,3);
@@ -455,7 +455,7 @@ function generateDinnerAuto(){
  for(const [id,k] of [['macroK','kcal'],['macroP','protein'],['macroC','carbs'],['macroF','fat']])$(id).value=g[k];
  $('macroDate').value=today();
  try{suggestMacroPlate();showDinnerResult();}
- catch(err){const t=$('dinnerVisibleResult');t.innerHTML='<h3>No se pudo generar el plato</h3><p>'+safe(String(err.message||err))+'</p>';t.hidden=false;}
+ catch(err){const t=$('dinnerVisibleResult');t.innerHTML='<h3>No se pudo generar el plato (v19.7)</h3><p>'+safe(String(err.message||err))+'</p>';t.hidden=false;}
 }
 function showDinnerResult(){
  const target=$('dinnerVisibleResult');if(!target)return;target.hidden=false;

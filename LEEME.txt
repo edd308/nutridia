@@ -1,1 +1,5 @@
-NutriDía v14. Menús con cálculo estimado cuando hay ingredientes, lista de compra según raciones y fotos reales aportadas o de productos guardados. Productos preparados sin etiqueta: pendiente de calcular. Exporta tus datos antes de actualizar. Los datos se guardan localmente en el navegador.
+NutriDía v17 · Rediseño verde natural
+
+Sube todos los archivos a la raíz del repositorio GitHub Pages. Exporta antes tus datos desde la aplicación. Esta versión conserva la clave localStorage existente y las funciones de v16.
+
+Novedades: inicio con accesos rápidos, navegación compacta con menú Más, nueva paleta, formularios y tarjetas modernizados, caché PWA renovada.
